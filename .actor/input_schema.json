@@ -1,0 +1,20 @@
+{
+    "title": "Sick Day Oracle Input",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "city": {
+            "title": "City",
+            "type": "string",
+            "description": "The city you are in today.",
+            "editor": "textfield"
+        },
+        "jobTitle": {
+            "title": "Your job title",
+            "type": "string",
+            "description": "What you do as your main job.",
+            "editor": "textfield"
+        }
+    },
+    "required": ["city", "jobTitle"]
+}

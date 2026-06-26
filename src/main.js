@@ -1,9 +1,11 @@
 import { Actor, log } from 'apify';
+import 'dotenv/config'
 
 await Actor.init();
 
 const input = await Actor.getInput();
-const { city, yourName = 'you', openRouterApiKey } = input;
+const { city, jobTitle } = input;
+const openRouterApiKey = process.env.OPENROUTER_API_KEY;
 const today = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 
 log.info('Sending the request to LLM.');
@@ -21,7 +23,7 @@ const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
         role: 'system',
         content: `You are a deadpan life coach who takes sick day decisions extremely seriously.
 Your first job is to look up the current weather in the city the user provides — use your knowledge of typical weather patterns for today's date and location as a reasonable estimate if you cannot fetch live data.
-Then decide whether the person should call in sick, with full legal-grade reasoning.
+Then decide whether the person should call in sick with full legal-grade reasoning.
 
 Rules:
 - Be deadpan and overly analytical, like you're testifying in court
@@ -31,11 +33,12 @@ Rules:
 - Keep it to 4-6 sentences max
 - Do NOT invent backstory about the person — no prior warnings, no misconduct, no employment history. You know nothing about them except their name and city.
 - Do not use the words "certainly", "straightforward", or "delightful"
-- This is a comedy tool. The tone should be gravely serious but the conclusions should be absurd.`,
+- This is a comedy tool. The tone should be gravely serious but the conclusions should be absurd.
+- Use their job title as one of the arguments.`,
         },
         {
         role: 'user',
-        content: `My name is ${yourName}. Today is ${today}. I'm in ${city}. Should I call in sick?`,
+        content: `I work as a ${jobTitle}. Today is ${today}. I'm in ${city}. Should I call in sick?`,
         },
     ],
   }),
@@ -50,9 +53,12 @@ const verdict = data.choices?.[0]?.message?.content?.trim();
 if (!verdict){
     throw new Error('The LLM refused to issue a verdict. Suspicious. Probably also calling in sick.');
 }
+else {
+    log.info('LLM has spoken. Check out your verdict.');
+}
 
 await Actor.pushData({
-    person: yourName,
+    jobTitle,
     city,
     date: today,
     verdict,

@@ -4,6 +4,7 @@
 .idea
 .vscode
 .zed
+*.env
 node_modules
 storage
 
