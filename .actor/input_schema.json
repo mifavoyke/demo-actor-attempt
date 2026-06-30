@@ -3,10 +3,10 @@
     "type": "object",
     "schemaVersion": 1,
     "properties": {
-        "city": {
-            "title": "City",
+        "datasetId": {
+            "title": "Dataset ID",
             "type": "string",
-            "description": "The city you are in today.",
+            "description": "The ID of the dataset from the Weather Oracle actor.",
             "editor": "textfield"
         },
         "jobTitle": {
@@ -16,5 +16,5 @@
             "editor": "textfield"
         }
     },
-    "required": ["city", "jobTitle"]
+    "required": ["datasetId", "jobTitle"]
 }
